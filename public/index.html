@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Implicit Confidence – Gesture Ratings</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <header class="app-header">
+      <h1>Gesture Ratings</h1>
+      <p class="sub">👍 👎 ✋ with implicit confidence logging</p>
+    </header>
+
+    <main class="stage">
+      <section class="preview">
+        <video id="cam" autoplay playsinline></video>
+        <canvas id="hud" width="1280" height="720" aria-label="HUD overlay"></canvas>
+
+        <div id="ring" class="ring" aria-hidden="true">
+          <svg viewBox="0 0 120 120" class="ring-svg">
+            <circle cx="60" cy="60" r="54" class="ring-track"></circle>
+            <circle cx="60" cy="60" r="54" class="ring-progress" stroke-dasharray="339.292" stroke-dashoffset="339.292"></circle>
+          </svg>
+          <span class="ring-label">Hold</span>
+        </div>
+
+        <div id="starFlash" class="star-flash" aria-live="polite" aria-atomic="true"></div>
+      </section>
+
+      <aside class="controls">
+        <div class="card">
+          <h2>Simulate</h2>
+          <div class="buttons">
+            <button id="btn-up" data-gesture="up">Thumbs Up (1)</button>
+            <button id="btn-down" data-gesture="down">Thumbs Down (2)</button>
+            <button id="btn-neutral" data-gesture="neutral">Neutral (3)</button>
+          </div>
+          <p class="hint">Hotkeys: 1 2 3</p>
+        </div>
+
+        <div class="card">
+          <h2>Status</h2>
+          <div class="status-row">
+            <span>Gesture</span><strong id="status-gesture">none</strong>
+          </div>
+          <div class="status-row">
+            <span>Hold ms</span><strong id="status-hold">0</strong>
+          </div>
+          <div class="status-row">
+            <span>Confidence</span><strong id="status-conf">0.00</strong>
+          </div>
+        </div>
+      </aside>
+    </main>
+
+    <footer class="app-footer">
+      <small>Webcam data stays local in your browser during capture. CSV logs saved to <code>/data</code>.</small>
+    </footer>
+
+    <!-- App entry -->
+    <script type="module" src="../src/app.js"></script>
+  </body>
+</html>
