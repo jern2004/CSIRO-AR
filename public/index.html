@@ -4,61 +4,139 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Implicit Confidence – Gesture Ratings</title>
-    <link rel="stylesheet" href="./styles.css" />
+    <link rel="stylesheet" href="./style.css" />
+    <!-- MediaPipe bundles -->
+  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.3/vision_bundle.js" crossorigin="anonymous"></script>
   </head>
   <body>
-    <header class="app-header">
-      <h1>Gesture Ratings</h1>
-      <p class="sub">👍 👎 ✋ with implicit confidence logging</p>
+    <header class="topbar">
+      <div class="topbar__inner">
+        <span class="topbar__brand">Gesture Ratings</span>
+        <nav class="topbar__nav" aria-label="site">
+          <a class="is-active" href="#overview">Overview</a>
+          <a href="#widgets">Widgets</a>
+          <a href="#logging">Logging</a>
+        </nav>
+      </div>
     </header>
 
-    <main class="stage">
-      <section class="preview">
-        <video id="cam" autoplay playsinline></video>
-        <canvas id="hud" width="1280" height="720" aria-label="HUD overlay"></canvas>
+    <main class="page" id="overview">
+      <section class="hero">
+        <div class="hero__media">
+          <div class="media-frame">
+            <video id="cam" autoplay playsinline muted></video>
+            <canvas id="hud" width="1280" height="720" aria-label="HUD overlay"></canvas>
 
-        <div id="ring" class="ring" aria-hidden="true">
-          <svg viewBox="0 0 120 120" class="ring-svg">
-            <circle cx="60" cy="60" r="54" class="ring-track"></circle>
-            <circle cx="60" cy="60" r="54" class="ring-progress" stroke-dasharray="339.292" stroke-dashoffset="339.292"></circle>
-          </svg>
-          <span class="ring-label">Hold</span>
+            <div id="ring" class="ring" aria-hidden="true">
+              <svg viewBox="0 0 120 120" class="ring-svg">
+                <circle cx="60" cy="60" r="54" class="ring-track"></circle>
+                <circle
+                  cx="60"
+                  cy="60"
+                  r="54"
+                  class="ring-progress"
+                  stroke-dasharray="339.292"
+                  stroke-dashoffset="339.292"
+                ></circle>
+              </svg>
+              <span class="ring-label">Hold</span>
+            </div>
+
+            <div id="starFlash" class="star-flash" aria-live="polite" aria-atomic="true"></div>
+          </div>
+          <p class="media-caption">Live camera feed for thumb-up / thumb-down detection.</p>
         </div>
 
-        <div id="starFlash" class="star-flash" aria-live="polite" aria-atomic="true"></div>
+        <aside class="hero__details" aria-labelledby="hero-title">
+          <h1 id="hero-title">Implicit Confidence Gesture Study</h1>
+          <p class="lead">Thumb-based gestures are captured to derive implicit confidence and log trial quality in real time.</p>
+
+          <dl class="details">
+            <div>
+              <dt>Authors</dt>
+              <dd>
+                <a href="mailto:author1@example.com">Author 1</a>,
+                <a href="mailto:author2@example.com">Author 2</a>,
+                <a href="mailto:author3@example.com">Author 3</a>
+              </dd>
+            </div>
+            <div>
+              <dt>Laboratory</dt>
+              <dd>CSIRO HCI and AR</dd>
+            </div>
+            <div>
+              <dt>Location</dt>
+              <dd>Perth, Western Australia</dd>
+            </div>
+            <div>
+              <dt>Contact</dt>
+              <dd><a href="mailto:siajern@gmail.com">siajern@gmail.com</a></dd>
+            </div>
+          </dl>
+        </aside>
       </section>
 
-      <aside class="controls">
-        <div class="card">
-          <h2>Simulate</h2>
-          <div class="buttons">
+      <section class="panels" id="widgets">
+        <article class="panel">
+          <h2>Live Status</h2>
+          <ul class="status">
+            <li>
+              <span>Gesture</span>
+              <strong id="status-gesture">none</strong>
+            </li>
+            <li>
+              <span>Hold (ms)</span>
+              <strong id="status-hold">0</strong>
+            </li>
+            <li>
+              <span>Confidence</span>
+              <strong id="status-conf">0.00</strong>
+            </li>
+          </ul>
+        </article>
+
+        <article class="panel">
+          <h2>Quick Controls</h2>
+          <p class="panel__note">Prototype shortcuts for dry runs without camera input.</p>
+          <div class="controls">
             <button id="btn-up" data-gesture="up">Thumbs Up (1)</button>
             <button id="btn-down" data-gesture="down">Thumbs Down (2)</button>
             <button id="btn-neutral" data-gesture="neutral">Neutral (3)</button>
+            <button id="toggle-landmarks" type="button">Toggle Landmarks</button>
           </div>
-          <p class="hint">Hotkeys: 1 2 3</p>
-        </div>
+          <p class="hint">Keyboard hotkeys: 1 / 2 / 3</p>
+        </article>
+      </section>
 
-        <div class="card">
-          <h2>Status</h2>
-          <div class="status-row">
-            <span>Gesture</span><strong id="status-gesture">none</strong>
-          </div>
-          <div class="status-row">
-            <span>Hold ms</span><strong id="status-hold">0</strong>
-          </div>
-          <div class="status-row">
-            <span>Confidence</span><strong id="status-conf">0.00</strong>
-          </div>
-        </div>
-      </aside>
+      <section class="copy" id="logging">
+        <article>
+          <h2>How It Works</h2>
+          <p>
+            We apply MediaPipe Tasks Gesture Recognizer in video mode for low-latency thumb pose detection. Stable gestures are
+            committed after 900&nbsp;ms, at which point we snapshot derived features and forward a trial packet to the logging service.
+          </p>
+        </article>
+        <article>
+          <h2>Reliability Notes</h2>
+          <p>
+            The interface surfaces camera and model failures, pauses logging while the gesture is neutral, and highlights each
+            confirmed decision with the HUD ring and celebratory stars. All thresholds and timings can be tuned from
+            <code>public/config.json</code>.
+          </p>
+        </article>
+      </section>
     </main>
 
-    <footer class="app-footer">
-      <small>Webcam data stays local in your browser during capture. CSV logs saved to <code>/data</code>.</small>
+    <footer class="footer">
+      <div class="footer__inner">
+        <small>&copy; <span id="year"></span> CSIRO Applied Robotics. Webcam data stays local during capture.</small>
+      </div>
     </footer>
 
     <!-- App entry -->
     <script type="module" src="../src/app.js"></script>
+    <script>
+      document.getElementById('year').textContent = new Date().getFullYear()
+    </script>
   </body>
 </html>
