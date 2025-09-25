@@ -1,0 +1,20 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>Cam Test</title>
+<video id="v" autoplay playsinline muted style="width:100%;max-width:800px;background:#111"></video>
+<pre id="log"></pre>
+<script>
+(async () => {
+  const v = document.getElementById('v');
+  const log = msg => (document.getElementById('log').textContent += msg + '\n');
+  try {
+    const stream = await navigator.mediaDevices.getUserMedia({ video: { width: 1280, height: 720, facingMode: "user" }, audio: false });
+    v.srcObject = stream;
+    v.muted = true; v.setAttribute('muted',''); // guarantees autoplay
+    await v.play();
+    v.onloadedmetadata = () => log(`video ${v.videoWidth}x${v.videoHeight} started`);
+  } catch (e) {
+    log('getUserMedia error: ' + e.name + ' - ' + e.message);
+  }
+})();
+</script>
