@@ -1,0 +1,8 @@
+{
+  "stable_ms": 900,
+  "min_score": 0.6,
+  "min_score_by_category": {
+    "Thumb_Up": 0.65,
+    "Thumb_Down": 0.65
+  }
+}

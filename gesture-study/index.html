@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gesture Rating Study</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Restart Button -->
+    <button id="restart-btn" class="restart-btn hidden" onclick="restartStudy()">
+        🔄 Restart Study
+    </button>
+
+    <div id="app">
+        
+        <!-- PHASE 0: SETUP + DEMOGRAPHICS -->
+        <div id="phase-setup" class="phase active">
+            <div class="container">
+                <div class="card">
+                    <h1>📊 Gesture Rating Study</h1>
+                    <p class="subtitle">Setup & Configuration</p>
+                    
+                    <div class="form-group">
+                        <label for="participant-id"><strong>Student ID</strong></label>
+                        <input type="text" id="participant-id" placeholder="e.g., 000001" autocomplete="off">
+                        <small>Enter a unique identifier for this participant</small>
+                    </div>
+
+                    <div class="form-group">
+                        <label><strong>Session ID</strong> (auto-generated)</label>
+                        <input type="text" id="session-id" disabled readonly>
+                    </div>
+
+                    <div class="demographics-section">
+                        <h3>Demographics</h3>
+                        
+                        <div class="form-group">
+                            <label for="demo-age"><strong>Age</strong></label>
+                            <input type="text" id="demo-age" placeholder="e.g., 25">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="demo-gender"><strong>Gender</strong></label>
+                            <select id="demo-gender">
+                                <option value="">Select...</option>
+                                <option value="Male">Male</option>
+                                <option value="Female">Female</option>
+                                <option value="Non-binary">Non-binary</option>
+                                <option value="Prefer not to say">Prefer not to say</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="demo-handedness"><strong>Handedness</strong></label>
+                            <select id="demo-handedness">
+                                <option value="">Select...</option>
+                                <option value="Right">Right</option>
+                                <option value="Left">Left</option>
+                                <option value="Ambidextrous">Ambidextrous</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="demo-device"><strong>Device today</strong></label>
+                            <select id="demo-device">
+                                <option value="">Select...</option>
+                                <option value="Laptop">Laptop</option>
+                                <option value="Phone">Phone</option>
+                                <option value="Tablet">Tablet</option>
+                                <option value="Other">Other</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="demo-experience"><strong>Prior gesture-UI experience</strong></label>
+                            <select id="demo-experience">
+                                <option value="">Select...</option>
+                                <option value="None">None</option>
+                                <option value="A little">A little</option>
+                                <option value="A lot">A lot</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="demo-accessories"><strong>Accessories covering hands?</strong></label>
+                            <select id="demo-accessories">
+                                <option value="">Select...</option>
+                                <option value="None">None</option>
+                                <option value="Gloves">Gloves</option>
+                                <option value="Long sleeves">Long sleeves</option>
+                                <option value="Other">Other</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <button class="btn btn-primary" onclick="startConsent()">
+                        Continue to Consent →
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- PHASE 1: CONSENT -->
+        <div id="phase-consent" class="phase">
+            <div class="container">
+                <div class="card">
+                    <h1>📋 Informed Consent</h1>
+                    
+                    <div class="consent-text">
+                        <h2>Study Title:</h2>
+                        <p>Implicit Confidence in Web-based Gesture Ratings</p>
+                        
+                        <h2>Purpose:</h2>
+                        <p>This study explores whether hand gesture characteristics can reveal implicit confidence in rating tasks.</p>
+                        
+                        <h2>Procedure:</h2>
+                        <ul>
+                            <li><strong>Phase 1 — Gestures:</strong> Respond to questions with natural hand gestures</li>
+                            <li><strong>Phase 1 — Your meaning:</strong> Label the same questions with explicit buttons</li>
+                            <li><strong>Phase 2 — Gesture spectrum:</strong> Show gestures across a spectrum (chill → hesitant)</li>
+                            <li>Your hand movements will be tracked using your webcam</li>
+                            <li>The study takes approximately 15-20 minutes</li>
+                        </ul>
+                        
+                        <h2>Data Collection:</h2>
+                        <p>We collect: gesture type, movement features (speed, smoothness, duration), 21-point hand landmarks, and your explicit ratings. All data is anonymized.</p>
+                        
+                        <h2>Privacy:</h2>
+                        <p>Your webcam is used for real-time hand tracking and video recording for research purposes only.</p>
+                    </div>
+
+                    <div class="consent-checkbox">
+                        <label>
+                            <input type="checkbox" id="consent-agree">
+                            <span>I have read and understood the information above. I consent to participate in this research study.</span>
+                        </label>
+                    </div>
+
+                    <button class="btn btn-primary" onclick="startInstructions()">
+                        I Consent - Continue →
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- PHASE 2: INSTRUCTIONS -->
+        <div id="phase-instructions" class="phase">
+            <div class="container">
+                <div class="card">
+                    <h1>📖 Instructions</h1>
+                    
+                    <div class="info-box info-blue">
+                        <h3>📝 Phase 1 — Gestures</h3>
+                        <p>Read each question and respond with a natural hand gesture. Hold briefly until you see "Detected — thank you."</p>
+                    </div>
+
+                    <div class="info-box info-green">
+                        <h3>📝 Phase 1 — Your meaning (no camera)</h3>
+                        <p>You'll now see the same questions again. Choose Very good / Good / Neutral / Bad / Very bad for each one.</p>
+                    </div>
+
+                    <div class="info-box info-yellow">
+                        <h3>📝 Phase 2 — Gesture spectrum</h3>
+                        <p>For each prompt (from "really chill" to "very hesitant"), show that feeling with a gesture. Hold briefly until "Detected — thank you."</p>
+                    </div>
+
+                    <button class="btn btn-success" onclick="startUnconstrainedPhase()">
+                        🎬 Start Study (Enable Camera)
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- PHASE 3: STUDY PHASES (Three Panels) -->
+        <div id="phase-study-phases" class="phase">
+            <div class="study-container">
+                
+                <!-- PANEL P1-G: Phase 1 Gestures -->
+                <div id="panel-p1g" style="display: none;">
+                    <div class="progress-section">
+                        <div class="phase-banner phase-banner-blue">
+                            📝 Phase 1 — Gestures (Use ANY gesture!)
+                        </div>
+                        <div class="progress-label">
+                            <span>Progress</span>
+                            <span id="progress-text-p1g">0 / 6</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" id="progress-fill-p1g"></div>
+                        </div>
+                    </div>
+
+                    <div class="study-grid">
+                        <div class="card">
+                            <h3>🎬 Camera View (21-Point Hand Tracking)</h3>
+                            <div class="video-container">
+                                <video id="webcam-p1g" autoplay playsinline muted></video>
+                                <canvas id="output-canvas-p1g"></canvas>
+                                
+                                <div class="status-overlay" id="status-overlay-p1g">
+                                    <div class="status-item">
+                                        <span>Gesture:</span>
+                                        <strong id="status-gesture-p1g">waiting...</strong>
+                                    </div>
+                                    <div class="status-item">
+                                        <span>Hold:</span>
+                                        <strong id="status-hold-p1g">0ms</strong>
+                                    </div>
+                                    <div class="status-item">
+                                        <span>Confidence:</span>
+                                        <strong id="status-confidence-p1g">0.00</strong>
+                                    </div>
+                                </div>
+
+                                <div id="reading-countdown-p1g" class="reading-countdown">
+                                    Please read the question... (3s)
+                                </div>
+
+                                <div id="detected-overlay-unconstrained" class="detected-overlay hidden">
+                                    <div class="overlay-card">Detected — thank you, Please remove you hands.</div>
+                                </div>
+                            </div>
+
+                            <div class="info-box info-yellow">
+                                <p style="margin: 0;">
+                                    <strong>💡 Use ANY gesture!</strong> Point, wave, thumbs up, peace sign, etc.
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="card">
+                            <h3>Express Your Response with ANY Gesture</h3>
+                            <div class="item-display">
+                                <p id="item-text-p1g">Loading...</p>
+                            </div>
+                            <div class="item-meta" id="item-meta-p1g">Item 1 of 6</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- PANEL P1-E: Phase 1 Explicit (NO camera) -->
+                <div id="panel-p1e" style="display: none;">
+                    <div class="progress-section">
+                        <div class="phase-banner phase-banner-green">
+                            📝 Phase 1 — Your Meaning (Pick one option)
+                        </div>
+                        <div class="progress-label">
+                            <span>Progress</span>
+                            <span id="progress-text-p1e">0 / 6</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" id="progress-fill-p1e"></div>
+                        </div>
+                    </div>
+
+                    <div class="container" style="max-width: 900px;">
+                        <div class="card">
+                            <h3>📝 Label Your Response</h3>
+                            <div class="item-display">
+                                <p id="p1e-prompt">Loading...</p>
+                            </div>
+                            
+                            <div class="p1e-buttons">
+                                <p><strong>Please select one:</strong></p>
+                                <div class="p1e-button-row">
+                                    <button class="p1e-btn" data-p1e="Very good">Very good</button>
+                                    <button class="p1e-btn" data-p1e="Good">Good</button>
+                                    <button class="p1e-btn" data-p1e="Neutral">Neutral</button>
+                                    <button class="p1e-btn" data-p1e="Bad">Bad</button>
+                                    <button class="p1e-btn" data-p1e="Very bad">Very bad</button>
+                                </div>
+                            </div>
+
+                            <div class="info-box info-gray" style="margin-top: 1.5rem;">
+                                <p style="margin: 0;"><strong>Note:</strong> You'll see the same questions you just gestured to. Please label each one explicitly.</p>
+                            </div>
+
+                            <div class="item-meta" id="p1e-meta">Item 1 of 6</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- PANEL P2-G: Phase 2 Gestures (Spectrum) -->
+                <div id="panel-p2g" style="display: none;">
+                    <div class="progress-section">
+                        <div class="phase-banner" style="background: #fef3c7; color: #92400e;">
+                            📝 Phase 2 — Gesture Spectrum
+                        </div>
+                        <div class="progress-label">
+                            <span>Progress</span>
+                            <span id="progress-text-p2g">0 / 5</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" id="progress-fill-p2g"></div>
+                        </div>
+                    </div>
+
+                    <div class="study-grid">
+                        <div class="card">
+                            <h3>🎬 Camera View (21-Point Hand Tracking)</h3>
+                            <div class="video-container">
+                                <video id="webcam-p2g" autoplay playsinline muted></video>
+                                <canvas id="output-canvas-p2g"></canvas>
+                                
+                                <div class="status-overlay" id="status-overlay-p2g">
+                                    <div class="status-item">
+                                        <span>Gesture:</span>
+                                        <strong id="status-gesture-p2g">waiting...</strong>
+                                    </div>
+                                    <div class="status-item">
+                                        <span>Hold:</span>
+                                        <strong id="status-hold-p2g">0ms</strong>
+                                    </div>
+                                    <div class="status-item">
+                                        <span>Confidence:</span>
+                                        <strong id="status-confidence-p2g">0.00</strong>
+                                    </div>
+                                </div>
+
+                                <div id="reading-countdown-p2g" class="reading-countdown">
+                                    Please read the question... (3s)
+                                </div>
+
+                                <div id="detected-overlay" class="detected-overlay hidden">
+                                    <div class="overlay-card">Detected — thank you</div>
+                                </div>
+                            </div>
+
+                            <div class="info-box info-yellow">
+                                <p style="margin: 0;">
+                                    <strong>💡 Show the feeling!</strong> Use gestures to express each emotion.
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="card">
+                            <h3>Show Your Gesture for This Prompt</h3>
+                            <div class="item-display">
+                                <p id="item-text-p2g">Loading...</p>
+                            </div>
+                            <div class="item-meta" id="item-meta-p2g">Item 1 of 5</div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- PHASE 4: COMPLETE -->
+        <div id="phase-complete" class="phase">
+            <div class="container">
+                <div class="card text-center">
+                    <div class="completion-icon">🎉</div>
+                    <h1>Study Complete!</h1>
+                    <p>Thank you for participating. You've completed all phases.</p>
+
+                    <div class="info-box info-blue">
+                        <h3>Data Summary:</h3>
+                        <div class="summary-grid">
+                            <div>
+                                <div class="summary-label">Participant ID</div>
+                                <div class="summary-value" id="summary-participant">-</div>
+                            </div>
+                            <div>
+                                <div class="summary-label">Session ID</div>
+                                <div class="summary-value" id="summary-session">-</div>
+                            </div>
+                            <div>
+                                <div class="summary-label">Total Trials</div>
+                                <div class="summary-value" id="summary-trials">0</div>
+                            </div>
+                            <div>
+                                <div class="summary-label">Duration</div>
+                                <div class="summary-value" id="summary-duration">0s</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <button class="btn btn-success btn-large" onclick="downloadData()">
+                        📥 Download Your Data (CSV)
+                    </button>
+
+                    <button class="btn btn-primary" onclick="restartStudy()" style="margin-top: 1rem;">
+                        🔄 Start New Session
+                    </button>
+
+                    <p class="small-text">Your data has been saved. You can now close this window.</p>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Import MediaPipe -->
+    <script type="importmap">
+    {
+      "imports": {
+        "@mediapipe/tasks-vision": "/node_modules/@mediapipe/tasks-vision/vision_bundle.mjs"
+      }
+    }
+    </script>
+
+    <!-- Load modules -->
+    <script type="module">
+    import MediaPipeTracker from './mediapipe-tracker.js';
+    import { 
+        startConsent, 
+        startInstructions, 
+        startUnconstrainedPhase,
+        downloadData,
+        restartStudy 
+    } from './app.js';
+
+    window.MediaPipeTracker = MediaPipeTracker;
+    window.startConsent = startConsent;
+    window.startInstructions = startInstructions;
+    window.startUnconstrainedPhase = startUnconstrainedPhase;
+    window.downloadData = downloadData;
+    window.restartStudy = restartStudy;
+    </script>
+</body>
+</html>
