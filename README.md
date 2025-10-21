@@ -86,6 +86,7 @@ implicit_confidence_comp =
 ---
 
 ## 🧱 System Architecture
+```
 CSIRO-AR/
 │
 ├── index.html # Main user interface
@@ -94,6 +95,7 @@ CSIRO-AR/
 ├── style.css # Full UI design and overlay styling
 ├── config.json # Confidence and threshold configuration
 └── /node_modules # MediaPipe runtime dependencies
+```
 
 ---
 
